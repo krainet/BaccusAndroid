@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +33,6 @@ public class WineFragment extends Fragment {
     private static final String TAG = WineFragment.class.getSimpleName();
     private static final int SETTINGS_REQUEST = 1;
     private static final String STATE_IMAGE_SCALETYPE = "com.develjitsu.baccus.controller.activity.WineFragment.STATE_IMAGE_SCALETYPE";
-
 
     //Modelo
     private Wine mWine1 = null;
@@ -86,7 +86,7 @@ public class WineFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_winery, menu);
     }
 
 
@@ -151,7 +151,7 @@ public class WineFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent webIntent = new Intent(getActivity(),WebActivity.class);
-                webIntent.putExtra(WebActivity.EXTRA_WINE, Wine.getDumyWine(1));
+                webIntent.putExtra(WebActivity.EXTRA_WINE, mWine1);
                 startActivity(webIntent);
             }
         });
@@ -169,6 +169,10 @@ public class WineFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(STATE_IMAGE_SCALETYPE,mWineImage.getScaleType());
+        try {
+            outState.putSerializable(STATE_IMAGE_SCALETYPE,mWineImage.getScaleType());
+        } catch (Exception e){
+            Log.v(TAG,e.getMessage());
+        }
     }
 }

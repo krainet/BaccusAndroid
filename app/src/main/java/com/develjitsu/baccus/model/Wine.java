@@ -1,9 +1,8 @@
 /**
  * Created by hadock on 11/10/15.
+ *
  */
 package com.develjitsu.baccus.model;
-
-import android.util.Log;
 
 import com.develjitsu.baccus.R;
 
@@ -133,8 +132,28 @@ public class Wine implements Serializable {
                     "Marqués de Vegamar",
                     "http://www.dominiodetares.com/portfolio/cepas-viejas/",
                     "Praesent efficitur magna ex, sit amet dictum lacus aliquet in. Duis placerat rutrum efficitur. In hac habitasse platea dictumst. Donec quis bibendum neque, vel sodales neque. Sed dignissim egestas tellus, in vestibulum neque posuere volutpat. Vivamus pellentesque nibh vitae nulla vulputate placerat. Donec eget dui egestas, tempus justo non, varius elit. Nulla dapibus dolor ac fermentum ultricies. Curabitur sed mi euismod, interdum nisi at, hendrerit odio. Sed sagittis mi a sagittis lobortis. Aliquam fermentum arcu a facilisis posuere.",
-                    "Ipsum Lorem",5);
+                    "Ipsum Lorem",4);
             dummyWine.addGrape("Sirah");
+            dummyWine.addGrape("Merlot");
+        }else if(number==3){
+            dummyWine = new Wine("Zarate",
+                    "Tinto",
+                    R.drawable.zarate,
+                    "Bodegas de Zarate",
+                    "http://bodegas-zarate.com/",
+                    "Sed consequat euismod felis quis pretium. Mauris sit amet elit ut ex volutpat congue. Vivamus lacinia, quam at fermentum tempus, leo enim sodales lectus, eget placerat orci augue pulvinar leo. Donec a est sit amet mauris viverra dignissim. Nullam eleifend, felis at pretium vulputate, velit arcu posuere metus, ut fringilla mi diam quis mi. Phasellus tristique maximus neque. In scelerisque pellentesque libero sit amet imperdiet. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam iaculis dolor sit amet elementum mattis. Pellentesque non orci placerat, faucibus ligula ac, mattis diam. Integer id orci libero. Nunc odio massa, mattis vel finibus et, fringilla vel libero. Vivamus tincidunt turpis id finibus ornare. Nam eget porta massa. Nulla cursus eros ut ullamcorper molestie. Suspendisse et diam ut ante consequat dignissim vel sed tellus.",
+                    "Franco Laiuppa",2);
+            dummyWine.addGrape("Rubia");
+            dummyWine.addGrape("Merlot");
+        }else if(number==4){
+            dummyWine = new Wine("Champagne",
+                    "Dorado",
+                    R.drawable.champagne,
+                    "Freixenet",
+                    "http://www.freixenet.es/cava/cuvee-prestige",
+                    "Etiam tristique, ex quis consequat mattis, leo leo feugiat felis, vitae rutrum orci ligula eget dui. Mauris at mauris fringilla, euismod tellus cursus, finibus erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis gravida, ex eget sagittis egestas, risus urna scelerisque ante, at condimentum nisi magna eget orci. Nam in purus varius, condimentum ligula mollis, cursus nunc. Vestibulum posuere metus sed nisl vulputate, a varius mi condimentum. Fusce ac risus neque. Phasellus sed consequat diam. Maecenas aliquet eros a bibendum ultrices. Nam condimentum libero lacus, et fermentum ex ultrices sit amet. Nunc consectetur scelerisque efficitur. Nam cursus consequat faucibus. Sed facilisis molestie arcu, et vehicula dolor cursus vitae. Nunc nisl nibh, maximus ultrices felis in, maximus dapibus tellus. Curabitur tempus ex et semper tempor. Mauris quis ante tincidunt, consectetur magna in, accumsan tortor.",
+                    "Sr Codorniu",3);
+            dummyWine.addGrape("Cavernet");
             dummyWine.addGrape("Merlot");
         }else{
             dummyWine = new Wine("Bembibre",
