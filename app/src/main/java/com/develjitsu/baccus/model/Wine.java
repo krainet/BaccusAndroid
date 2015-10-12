@@ -3,6 +3,8 @@
  */
 package com.develjitsu.baccus.model;
 
+import android.util.Log;
+
 import com.develjitsu.baccus.R;
 
 import java.io.Serializable;
@@ -12,7 +14,7 @@ import java.util.List;
 public class Wine implements Serializable {
 
     private String mName = null;
-    private String nType = null;
+    private String mType = null;
     private int mPhoto = 0;
     private String mCompanyName = null;
     private String mCompanyWeb =null;
@@ -23,7 +25,7 @@ public class Wine implements Serializable {
 
     public Wine(String name, String nType, int photo, String companyName, String companyWeb, String notes, String origin, int rating) {
         mName = name;
-        this.nType = nType;
+        this.mType = nType;
         mPhoto = photo;
         mCompanyName = companyName;
         mCompanyWeb = companyWeb;
@@ -42,12 +44,12 @@ public class Wine implements Serializable {
         mName = name;
     }
 
-    public String getnType() {
-        return nType;
+    public String getType() {
+        return mType;
     }
 
-    public void setnType(String nType) {
-        this.nType = nType;
+    public void setType(String nType) {
+        this.mType = nType;
     }
 
     public int getPhoto() {

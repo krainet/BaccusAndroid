@@ -1,12 +1,16 @@
-package com.develjitsu.baccus.controller;
+package com.develjitsu.baccus.controller.fragment;
+
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -16,32 +20,41 @@ import android.widget.ProgressBar;
 import com.develjitsu.baccus.R;
 import com.develjitsu.baccus.model.Wine;
 
-import static com.develjitsu.baccus.R.*;
-
 /**
- * Created by hadock on 11/10/15.
+ * Created by hadock on 12/10/15.
  *
  */
-
-public class WebActivity extends AppCompatActivity{
+public class WebFragment extends Fragment {
 
     private WebView mBrowser = null;
     private ProgressBar mLoading = null;
     private static final String STATE_URL = "url";
-    public static final String EXTRA_WINE = "wine";
+    public static final String ARG_WINE = "com.develjitsu.baccus.controller.activity.WebFragment.ARG_WINE";
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
-        setContentView(layout.activity_web);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
 
-        //Wine dummyWine = Wine.getDumyWine();
-        Wine dummyWine = (Wine) getIntent().getSerializableExtra(EXTRA_WINE);
+        //setContentView(R.layout.fragment_web);  //en lugar de on Createview usamos inflater
+        View root = inflater.inflate(R.layout.fragment_web,container,false);
+
+
+        //En lugar de getIntent se usa GetArguments y el prefix es ARG_ en lugar de EXTRA_
+        //Wine dummyWine = (Wine) getIntent().getSerializableExtra(EXTRA_WINE);
+        Wine dummyWine = (Wine) getArguments().getSerializable(ARG_WINE);
 
         //Asociamos vista y controlador
-        mBrowser = (WebView)  findViewById(id.browser);
-        mLoading = (ProgressBar) findViewById(id.loading);
+        //para el findViewById ponemos delante la vista (root)
+        mBrowser = (WebView)  root.findViewById(R.id.browser);
+        mLoading = (ProgressBar) root.findViewById(R.id.loading);
 
         //Configuro / Sync vista-modelo
         mBrowser.setWebViewClient(new WebViewClient() {
@@ -74,30 +87,35 @@ public class WebActivity extends AppCompatActivity{
             mBrowser.loadUrl(savedInstanceState.getString(STATE_URL));
         }
 
+        return root;
     }
 
+    //En un fragment este metodo es public en lugar de protected
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putString(STATE_URL, mBrowser.getUrl());
     }
 
+
+    //OnCreateOptionsMenu cambia en un gragment
+
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_web,menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_web, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        if(item.getItemId()== id.menu_reload){
+        if(item.getItemId()== R.id.menu_reload){
             mBrowser.reload();
             return true;
         }
         return false;
     }
+
 }
