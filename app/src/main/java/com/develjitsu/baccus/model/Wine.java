@@ -114,7 +114,7 @@ public class Wine implements Serializable {
 
         Wine dummyWine = null;
 
-        if(number == 1 || number==null){
+        if(number == 1){
             dummyWine = new Wine("Bembibre",
                     "Tinto",
                     R.drawable.bembibre,

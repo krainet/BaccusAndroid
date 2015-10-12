@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.develjitsu.baccus.controller.WineryActivity"
-    android:id="@android:id/tabhost">
+    android:id="@android:id/tabhost"
+    tools:context="com.develjitsu.baccus.controller.WineryActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,13 +16,13 @@
         <TabWidget
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@android:id/tabs" />
+            android:id="@android:id/tabs"></TabWidget>
 
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@android:id/tabcontent" />
+            android:id="@android:id/tabcontent"></FrameLayout>
     </LinearLayout>
 
 

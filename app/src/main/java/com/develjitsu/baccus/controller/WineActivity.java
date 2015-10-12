@@ -26,7 +26,7 @@ public class WineActivity extends AppCompatActivity {
     private static final String TAG = WineActivity.class.getSimpleName();
     private static final int SETTINGS_REQUEST = 1;
     private static final String STATE_IMAGE_SCALETYPE = "com.develjitsu.baccus.controller.WineActivity.STATE_IMAGE_SCALETYPE";
-    private static final String EXTRA_WINE = "com.develjitsu.baccus.controller.WineActivity.EXTRA_WINE";
+    public static final String EXTRA_WINE = "com.develjitsu.baccus.controller.WineActivity.EXTRA_WINE";
 
 
 
@@ -58,7 +58,9 @@ public class WineActivity extends AppCompatActivity {
 
 
         //Creamos modelo
-        createDumyModels();
+        //createDumyModels();
+        getModelFromTab();
+
 
         //Conexion V/C
         setWineModel();
@@ -109,27 +111,13 @@ public class WineActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void getModelFromTab(){
+        mWine1 = (Wine) getIntent().getSerializableExtra(EXTRA_WINE);
+    }
+
     public void createDumyModels(){
-        mWine1 = new Wine("Bembibre",
-                "Tinto",
-                R.drawable.bembibre,
-                "Dominio de Tares",
-                "http://www.dominiodetares.com/portfolio/benbibre/",
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus nec tincidunt neque, vel viverra tortor. Sed vel metus pharetra, eleifend ligula sed, pellentesque risus. Ut pharetra porttitor tortor, sit amet consectetur orci semper et. Nam ac tincidunt augue. Curabitur aliquet interdum congue. Vivamus nec ullamcorper felis. Sed ultricies, ligula ac semper accumsan, nunc arcu porttitor nisi, eget maximus urna ipsum ac elit. Integer eleifend iaculis consequat.",
-                "Valdepeñas",5);
-        mWine1.addGrape("Mencia");
-        mWine1.addGrape("Cabernet");
-
-        mWine2 = new Wine("Vegamar",
-                "Blanco",
-                R.drawable.vegamar,
-                "Marqués de Vegamar",
-                "http://www.dominiodetares.com/portfolio/cepas-viejas/",
-                "Praesent efficitur magna ex, sit amet dictum lacus aliquet in. Duis placerat rutrum efficitur. In hac habitasse platea dictumst. Donec quis bibendum neque, vel sodales neque. Sed dignissim egestas tellus, in vestibulum neque posuere volutpat. Vivamus pellentesque nibh vitae nulla vulputate placerat. Donec eget dui egestas, tempus justo non, varius elit. Nulla dapibus dolor ac fermentum ultricies. Curabitur sed mi euismod, interdum nisi at, hendrerit odio. Sed sagittis mi a sagittis lobortis. Aliquam fermentum arcu a facilisis posuere.",
-                "Ipsum Lorem",5);
-        mWine2.addGrape("Sirah");
-        mWine2.addGrape("Merlot");
-
+        mWine1 = Wine.getDumyWine(1);
+        mWine2 = Wine.getDumyWine(2);
     }
 
     public void setWineModel(){
@@ -153,6 +141,7 @@ public class WineActivity extends AppCompatActivity {
         mWineCompanyText.setText(wine.getCompanyName());
         mWineNotesText.setText(wine.getNotes());
         mWineRatingBar.setRating(wine.getRating());
+        mWineImage.setImageResource(wine.getPhoto());
 
         for(int i=0;i<wine.getGrapeCount();i++){
             TextView grapeText = new TextView(this);
