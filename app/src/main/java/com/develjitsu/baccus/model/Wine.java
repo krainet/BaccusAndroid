@@ -170,4 +170,8 @@ public class Wine implements Serializable {
         return dummyWine;
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +23,20 @@ import com.develjitsu.baccus.model.Winery;
  *
  */
 public class WineryFragment extends Fragment implements ViewPager.OnPageChangeListener {
+
+    public static final String ARG_WINE_INDEX = "com.develjitsu.baccus.controller.fragment.ARG_WINE_INDEX";
+    private static int argument_wine = 0;
+
+    public static WineryFragment newInstance(int wineIndex) {
+        Bundle arguments = new Bundle();
+        arguments.putInt(ARG_WINE_INDEX, wineIndex);
+        argument_wine=wineIndex;
+        WineryFragment fragment = new WineryFragment();
+        fragment.setArguments(arguments);
+
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +64,9 @@ public class WineryFragment extends Fragment implements ViewPager.OnPageChangeLi
         //Activo listener de PageView e implemento la interfaz/metodos
         mPager.setOnPageChangeListener(this);
 
-        updateActionBar(0);
-
+        int initialWineIndex = getArguments().getInt(ARG_WINE_INDEX);
+        updateActionBar(initialWineIndex);
+        mPager.setCurrentItem(initialWineIndex);
 
         return root;
     }
@@ -62,7 +78,7 @@ public class WineryFragment extends Fragment implements ViewPager.OnPageChangeLi
         mPager.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPager.setCurrentItem(0);
+                mPager.setCurrentItem(argument_wine);
             }
         }, 100);
     }
@@ -75,6 +91,8 @@ public class WineryFragment extends Fragment implements ViewPager.OnPageChangeLi
     @Override
     public void onPageSelected(int position) {
         updateActionBar(position);
+        //Forzar Prepare menu && aqui no hace falta porque damos soporte a version 8 de android
+        //getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -93,11 +111,27 @@ public class WineryFragment extends Fragment implements ViewPager.OnPageChangeLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        boolean superValue = super.onOptionsItemSelected(item);
+        if(item.getItemId()== R.id.menu_next  && mPager.getCurrentItem()<mWinery.getWineCount()-1){
+            mPager.setCurrentItem(mPager.getCurrentItem()+1);
+            return true;
+        }
+        else if(item.getItemId()==R.id.menu_prev && mPager.getCurrentItem()>0){
+            mPager.setCurrentItem(mPager.getCurrentItem()-1);
+            return true;
+        }else{
+            return superValue;
+        }
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        MenuItem menuNext = menu.findItem(R.id.menu_next);
+        MenuItem menuPrevious = menu.findItem(R.id.menu_prev);
+
+        menuNext.setEnabled(mPager.getCurrentItem()<mWinery.getWineCount()-1);
+        menuPrevious.setEnabled(mPager.getCurrentItem() > 0);
     }
+
 }

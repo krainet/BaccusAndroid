@@ -39,4 +39,9 @@ public class Winery implements Serializable {
     public int getWineCount(){
         return mWines.size();
     }
+
+    public List<Wine> getWineList() {
+        return mWines;
+    }
+
 }
