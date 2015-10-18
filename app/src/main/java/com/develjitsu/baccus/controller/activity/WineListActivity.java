@@ -33,7 +33,6 @@ public class WineListActivity extends AppCompatActivity implements WineListFragm
             Fragment listFragment = fm.findFragmentById(R.id.list);
             if(listFragment==null){
                 listFragment = new WineListFragment();
-                Log.v("RAMON", "Entramos LIST");
                 fm.beginTransaction().add(R.id.list,listFragment).commit();
             }
         }
@@ -41,7 +40,6 @@ public class WineListActivity extends AppCompatActivity implements WineListFragm
         if(findViewById(R.id.winery)!=null){
             Fragment wineryFragment = fm.findFragmentById(R.id.winery);
             if(wineryFragment == null){
-                Log.v("RAMON","Entramos WINERY");
                 int prefSelectedWine = PreferenceManager.getDefaultSharedPreferences(this).getInt(WineryFragment.PREF_LAST_WINE_INDEX,0);
                 wineryFragment = WineryFragment.newInstance(prefSelectedWine);
                 fm.beginTransaction().add(R.id.winery,wineryFragment).commit();

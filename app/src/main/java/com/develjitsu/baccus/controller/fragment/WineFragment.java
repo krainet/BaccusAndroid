@@ -100,9 +100,20 @@ public class WineFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+/*
+            //Llamada desde activity , llamamos desde dialog con fragment
             Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
-            settingsIntent.putExtra(SettingsActivity.EXTRA_WINE_IMAGE_SCALE_TYPE,mWineImage.getScaleType());
-            startActivityForResult(settingsIntent,SETTINGS_REQUEST);
+            settingsIntent.putExtra(SettingsActivity.EXTRA_WINE_IMAGE_SCALE_TYPE, mWineImage.getScaleType());
+            startActivityForResult(settingsIntent, SETTINGS_REQUEST);
+*/
+
+            SettingsFragment settingsFragment = new SettingsFragment();
+            Bundle arguments = new Bundle();
+            arguments.putSerializable(SettingsFragment.ARG_WINE_IMAGE_SCALE_TYPE,mWineImage.getScaleType());
+            settingsFragment.setArguments(arguments);
+            settingsFragment.setTargetFragment(this,SETTINGS_REQUEST);
+            settingsFragment.show(getFragmentManager(),null);
             return true;
         }
 

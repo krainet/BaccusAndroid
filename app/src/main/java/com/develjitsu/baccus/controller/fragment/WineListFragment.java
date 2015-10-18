@@ -36,7 +36,6 @@ public class WineListFragment extends Fragment {
         // Inflate the layout for this fragment
         Winery winery = Winery.getInstance();
         View root = inflater.inflate(R.layout.fragment_wine_list, container, false);
-        Log.v("RAMON","entramos en list fragment");
 
         ListView listView = (ListView) root.findViewById(android.R.id.list);
         ArrayAdapter<Wine> adapter = new ArrayAdapter<Wine>(getActivity(), android.R.layout.simple_list_item_1, winery.getWineList());
