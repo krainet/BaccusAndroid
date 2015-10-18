@@ -1,5 +1,6 @@
 package com.develjitsu.baccus.controller.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,7 +16,7 @@ import com.develjitsu.baccus.controller.fragment.WineryFragment;
  * Created by hadock on 17/10/15.
  *
  */
-public class WineListActivity extends AppCompatActivity {
+public class WineListActivity extends AppCompatActivity implements WineListFragment.OnWineSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,21 @@ public class WineListActivity extends AppCompatActivity {
                 wineryFragment = WineryFragment.newInstance(0);
                 fm.beginTransaction().add(R.id.winery,wineryFragment).commit();
             }
+        }
+    }
+
+    @Override
+    public void onWineSelected(int wineIndex) {
+        //detectamos dipositivo
+        WineryFragment wineryFragment = (WineryFragment) getSupportFragmentManager().findFragmentById(R.id.winery);
+        //tablet horizontal
+        if(wineryFragment!=null){
+            wineryFragment.changeWine(wineIndex);
+        }else{
+            //no tablet horizontal
+            Intent wineryIntent = new Intent(this, WineryActivity.class);
+            wineryIntent.putExtra(WineryActivity.EXTRA_WINE_INDEX,wineIndex);
+            startActivity(wineryIntent);
         }
     }
 }

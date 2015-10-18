@@ -134,4 +134,8 @@ public class WineryFragment extends Fragment implements ViewPager.OnPageChangeLi
         menuPrevious.setEnabled(mPager.getCurrentItem() > 0);
     }
 
+    public void changeWine(int wineIndex){
+        mPager.setCurrentItem(wineIndex);
+    }
+
 }
