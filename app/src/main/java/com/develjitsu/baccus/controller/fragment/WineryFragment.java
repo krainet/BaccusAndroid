@@ -1,6 +1,7 @@
 package com.develjitsu.baccus.controller.fragment;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -26,6 +27,8 @@ public class WineryFragment extends Fragment implements ViewPager.OnPageChangeLi
 
     public static final String ARG_WINE_INDEX = "com.develjitsu.baccus.controller.fragment.ARG_WINE_INDEX";
     private static int argument_wine = 0;
+
+    public static final String PREF_LAST_WINE_INDEX = "lastWine";
 
     public static WineryFragment newInstance(int wineIndex) {
         Bundle arguments = new Bundle();
@@ -93,6 +96,12 @@ public class WineryFragment extends Fragment implements ViewPager.OnPageChangeLi
         updateActionBar(position);
         //Forzar Prepare menu && aqui no hace falta porque damos soporte a version 8 de android
         //getActivity().invalidateOptionsMenu();
+
+        //Salvo vino seleccionado
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .edit()
+                .putInt(PREF_LAST_WINE_INDEX,position)
+                .commit();
     }
 
     @Override

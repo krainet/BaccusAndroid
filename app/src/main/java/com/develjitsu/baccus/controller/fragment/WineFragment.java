@@ -3,6 +3,7 @@ package com.develjitsu.baccus.controller.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -175,6 +176,16 @@ public class WineFragment extends Fragment {
             }
         } catch (Exception e){
             Log.v(TAG,e.getMessage());
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(PreferenceManager.getDefaultSharedPreferences(getActivity()).contains(SettingsFragment.PREF_IMAGE_SCALE_TYPE)){
+            String scaleTypeString = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingsFragment.PREF_IMAGE_SCALE_TYPE,null);
+            ImageView.ScaleType scaleType = ImageView.ScaleType.valueOf(scaleTypeString);
+            mWineImage.setScaleType(scaleType);
         }
     }
 }

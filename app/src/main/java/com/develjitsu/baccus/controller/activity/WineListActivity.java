@@ -2,6 +2,7 @@ package com.develjitsu.baccus.controller.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +42,8 @@ public class WineListActivity extends AppCompatActivity implements WineListFragm
             Fragment wineryFragment = fm.findFragmentById(R.id.winery);
             if(wineryFragment == null){
                 Log.v("RAMON","Entramos WINERY");
-                wineryFragment = WineryFragment.newInstance(0);
+                int prefSelectedWine = PreferenceManager.getDefaultSharedPreferences(this).getInt(WineryFragment.PREF_LAST_WINE_INDEX,0);
+                wineryFragment = WineryFragment.newInstance(prefSelectedWine);
                 fm.beginTransaction().add(R.id.winery,wineryFragment).commit();
             }
         }
