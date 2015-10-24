@@ -23,6 +23,8 @@ import com.develjitsu.baccus.controller.activity.SettingsActivity;
 import com.develjitsu.baccus.controller.activity.WebActivity;
 import com.develjitsu.baccus.model.Wine;
 
+import java.io.IOException;
+
 /**
  * Created by hadock on 12/10/15.
  * 
@@ -72,7 +74,11 @@ public class WineFragment extends Fragment {
 
 
         //Damos valor a la vista
-        setWineModelValues(mWine1);
+        try {
+            setWineModelValues(mWine1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //Configuramos botones
         configButtons();
@@ -112,7 +118,7 @@ public class WineFragment extends Fragment {
             Bundle arguments = new Bundle();
             arguments.putSerializable(SettingsFragment.ARG_WINE_IMAGE_SCALE_TYPE,mWineImage.getScaleType());
             settingsFragment.setArguments(arguments);
-            settingsFragment.setTargetFragment(this,SETTINGS_REQUEST);
+            settingsFragment.setTargetFragment(this, SETTINGS_REQUEST);
             settingsFragment.show(getFragmentManager(),null);
             return true;
         }
@@ -138,7 +144,7 @@ public class WineFragment extends Fragment {
         mGotoWebButton = (ImageButton) root.findViewById(R.id.goto_web_button);
     }
 
-    public void setWineModelValues(Wine wine){
+    public void setWineModelValues(Wine wine) throws IOException {
 
         if(wine!=null){
             mWineNameText.setText(wine.getName());
@@ -147,7 +153,7 @@ public class WineFragment extends Fragment {
             mWineCompanyText.setText(wine.getCompanyName());
             mWineNotesText.setText(wine.getNotes());
             mWineRatingBar.setRating(wine.getRating());
-            mWineImage.setImageResource(wine.getPhoto());
+            mWineImage.setImageBitmap(wine.getPhoto(getActivity()));
 
             for(int i=0;i<wine.getGrapeCount();i++){
                 TextView grapeText = new TextView(getActivity());

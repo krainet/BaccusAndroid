@@ -4,17 +4,30 @@
  */
 package com.develjitsu.baccus.model;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
 import com.develjitsu.baccus.R;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Wine implements Serializable {
 
+    private String mId = null;
     private String mName = null;
     private String mType = null;
-    private int mPhoto = 0;
+    private Bitmap mPhoto = null;
+    private String mPhotoURL = null;
     private String mCompanyName = null;
     private String mCompanyWeb =null;
     private String mNotes = null;
@@ -22,10 +35,11 @@ public class Wine implements Serializable {
     private int mRating = 0; // 0 to 5
     private List<String> mGrapes = new LinkedList<>();
 
-    public Wine(String name, String nType, int photo, String companyName, String companyWeb, String notes, String origin, int rating) {
+    public Wine(String id, String name, String nType, String photoURL, String companyName, String companyWeb, String notes, String origin, int rating) {
+        mId=id;
         mName = name;
         this.mType = nType;
-        mPhoto = photo;
+        mPhotoURL = photoURL;
         mCompanyName = companyName;
         mCompanyWeb = companyWeb;
         mNotes = notes;
@@ -51,11 +65,14 @@ public class Wine implements Serializable {
         this.mType = nType;
     }
 
-    public int getPhoto() {
+    public Bitmap getPhoto(Context context) throws IOException {
+        if(mPhoto==null){
+            mPhoto=getBitmapFromURL(getPhotoURL(),context);
+        }
         return mPhoto;
     }
 
-    public void setPhoto(int photo) {
+    public void setPhoto(Bitmap photo) {
         mPhoto = photo;
     }
 
@@ -111,67 +128,54 @@ public class Wine implements Serializable {
         return mGrapes.get(index);
     }
 
-    public static Wine getDumyWine(int number){
-
-        Wine dummyWine = null;
-
-        if(number == 1){
-            dummyWine = new Wine("Bembibre",
-                    "Tinto",
-                    R.drawable.bembibre,
-                    "Dominio de Tares",
-                    "http://www.dominiodetares.com/portfolio/benbibre/",
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus nec tincidunt neque, vel viverra tortor. Sed vel metus pharetra, eleifend ligula sed, pellentesque risus. Ut pharetra porttitor tortor, sit amet consectetur orci semper et. Nam ac tincidunt augue. Curabitur aliquet interdum congue. Vivamus nec ullamcorper felis. Sed ultricies, ligula ac semper accumsan, nunc arcu porttitor nisi, eget maximus urna ipsum ac elit. Integer eleifend iaculis consequat.",
-                    "Valdepeñas",5);
-            dummyWine.addGrape("Mencia");
-            dummyWine.addGrape("Cabernet");
-        }else if(number==2){
-            dummyWine = new Wine("Vegamar",
-                    "Blanco",
-                    R.drawable.vegamar,
-                    "Marqués de Vegamar",
-                    "http://www.dominiodetares.com/portfolio/cepas-viejas/",
-                    "Praesent efficitur magna ex, sit amet dictum lacus aliquet in. Duis placerat rutrum efficitur. In hac habitasse platea dictumst. Donec quis bibendum neque, vel sodales neque. Sed dignissim egestas tellus, in vestibulum neque posuere volutpat. Vivamus pellentesque nibh vitae nulla vulputate placerat. Donec eget dui egestas, tempus justo non, varius elit. Nulla dapibus dolor ac fermentum ultricies. Curabitur sed mi euismod, interdum nisi at, hendrerit odio. Sed sagittis mi a sagittis lobortis. Aliquam fermentum arcu a facilisis posuere.",
-                    "Ipsum Lorem",4);
-            dummyWine.addGrape("Sirah");
-            dummyWine.addGrape("Merlot");
-        }else if(number==3){
-            dummyWine = new Wine("Zarate",
-                    "Tinto",
-                    R.drawable.zarate,
-                    "Bodegas de Zarate",
-                    "http://bodegas-zarate.com/",
-                    "Sed consequat euismod felis quis pretium. Mauris sit amet elit ut ex volutpat congue. Vivamus lacinia, quam at fermentum tempus, leo enim sodales lectus, eget placerat orci augue pulvinar leo. Donec a est sit amet mauris viverra dignissim. Nullam eleifend, felis at pretium vulputate, velit arcu posuere metus, ut fringilla mi diam quis mi. Phasellus tristique maximus neque. In scelerisque pellentesque libero sit amet imperdiet. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam iaculis dolor sit amet elementum mattis. Pellentesque non orci placerat, faucibus ligula ac, mattis diam. Integer id orci libero. Nunc odio massa, mattis vel finibus et, fringilla vel libero. Vivamus tincidunt turpis id finibus ornare. Nam eget porta massa. Nulla cursus eros ut ullamcorper molestie. Suspendisse et diam ut ante consequat dignissim vel sed tellus.",
-                    "Franco Laiuppa",2);
-            dummyWine.addGrape("Rubia");
-            dummyWine.addGrape("Merlot");
-        }else if(number==4){
-            dummyWine = new Wine("Champagne",
-                    "Dorado",
-                    R.drawable.champagne,
-                    "Freixenet",
-                    "http://www.freixenet.es/cava/cuvee-prestige",
-                    "Etiam tristique, ex quis consequat mattis, leo leo feugiat felis, vitae rutrum orci ligula eget dui. Mauris at mauris fringilla, euismod tellus cursus, finibus erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis gravida, ex eget sagittis egestas, risus urna scelerisque ante, at condimentum nisi magna eget orci. Nam in purus varius, condimentum ligula mollis, cursus nunc. Vestibulum posuere metus sed nisl vulputate, a varius mi condimentum. Fusce ac risus neque. Phasellus sed consequat diam. Maecenas aliquet eros a bibendum ultrices. Nam condimentum libero lacus, et fermentum ex ultrices sit amet. Nunc consectetur scelerisque efficitur. Nam cursus consequat faucibus. Sed facilisis molestie arcu, et vehicula dolor cursus vitae. Nunc nisl nibh, maximus ultrices felis in, maximus dapibus tellus. Curabitur tempus ex et semper tempor. Mauris quis ante tincidunt, consectetur magna in, accumsan tortor.",
-                    "Sr Codorniu",3);
-            dummyWine.addGrape("Cavernet");
-            dummyWine.addGrape("Merlot");
-        }else{
-            dummyWine = new Wine("Bembibre",
-                    "Tinto",
-                    R.drawable.bembibre,
-                    "Dominio de Tares",
-                    "http://www.dominiodetares.com/portfolio/benbibre/",
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus nec tincidunt neque, vel viverra tortor. Sed vel metus pharetra, eleifend ligula sed, pellentesque risus. Ut pharetra porttitor tortor, sit amet consectetur orci semper et. Nam ac tincidunt augue. Curabitur aliquet interdum congue. Vivamus nec ullamcorper felis. Sed ultricies, ligula ac semper accumsan, nunc arcu porttitor nisi, eget maximus urna ipsum ac elit. Integer eleifend iaculis consequat.",
-                    "Valdepeñas",5);
-            dummyWine.addGrape("Mencia");
-            dummyWine.addGrape("Cabernet");
-        }
-
-        return dummyWine;
-    }
-
     @Override
     public String toString() {
         return getName();
+    }
+
+    public String getPhotoURL() {
+        return mPhotoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        mPhotoURL = photoURL;
+    }
+
+    private Bitmap getBitmapFromURL(String photoURL,Context context) {
+        File imageFile = new File(context.getCacheDir(),getId());
+        if(imageFile.exists()){
+            return BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+        }
+
+        InputStream in = null;
+        try {
+            in=new URL(photoURL).openStream();
+            Bitmap img = BitmapFactory.decodeStream(in);
+
+            //guardamos en cache
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            img.compress(Bitmap.CompressFormat.PNG,90,fos);
+
+            return img;
+        } catch (Exception e) {
+            Log.e(getClass().getSimpleName(), "Error downloading image", e);
+            return null;
+        }finally {
+            try{
+                if(in!=null){
+                    in.close();
+                }
+            }catch (Exception e){
+
+            }
+        }
+    }
+
+    public String getId() {
+        return mId;
+    }
+
+    public void setId(String id) {
+        mId = id;
     }
 }

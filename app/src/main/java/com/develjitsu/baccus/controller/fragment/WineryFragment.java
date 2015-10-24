@@ -1,5 +1,7 @@
 package com.develjitsu.baccus.controller.fragment;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -27,6 +29,7 @@ public class WineryFragment extends Fragment implements ViewPager.OnPageChangeLi
 
     public static final String ARG_WINE_INDEX = "com.develjitsu.baccus.controller.fragment.ARG_WINE_INDEX";
     private static int argument_wine = 0;
+    private ProgressDialog mProgressDialog=null;
 
     public static final String PREF_LAST_WINE_INDEX = "lastWine";
 
@@ -54,36 +57,59 @@ public class WineryFragment extends Fragment implements ViewPager.OnPageChangeLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.fragment_winery, container, false);
+        final View root = inflater.inflate(R.layout.fragment_winery, container, false);
 
-        mWinery= Winery.getInstance();
+        AsyncTask<Void,Void,Winery> wineryDownloader = new AsyncTask<Void, Void, Winery>() {
+            @Override
+            protected Winery doInBackground(Void... params) {
+                return Winery.getInstance();
+            }
 
-        mPager = (ViewPager) root.findViewById(R.id.pager);
-        mPager.setAdapter(new WineryPagerAdapter(getFragmentManager()));
+            @Override
+            protected void onPostExecute(Winery winery) {
+                super.onPostExecute(winery);
+                mWinery= Winery.getInstance();
+                //Referencia a la actionbar
+                mActionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
 
-        //Referencia a la actionbar
-        mActionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+                mPager = (ViewPager) root.findViewById(R.id.pager);
+                mPager.setAdapter(new WineryPagerAdapter(getFragmentManager()));
 
-        //Activo listener de PageView e implemento la interfaz/metodos
-        mPager.setOnPageChangeListener(this);
+                //Activo listener de PageView e implemento la interfaz/metodos
+                mPager.setOnPageChangeListener(WineryFragment.this);
 
-        int initialWineIndex = getArguments().getInt(ARG_WINE_INDEX);
-        updateActionBar(initialWineIndex);
-        mPager.setCurrentItem(initialWineIndex);
+                int initialWineIndex = getArguments().getInt(ARG_WINE_INDEX);
+                updateActionBar(initialWineIndex);
+                mPager.setCurrentItem(initialWineIndex);
 
+                mProgressDialog.dismiss();
+
+            }
+        };
+
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setTitle(getString(R.string.loading));
+
+        if(!Winery.isInstanceAviable()){
+            mProgressDialog.show();
+        }
+
+        wineryDownloader.execute();
         return root;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mPager.setCurrentItem(1);
-        mPager.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mPager.setCurrentItem(argument_wine);
-            }
-        }, 100);
+        if(mPager!=null) {
+            mPager.setCurrentItem(1);
+            mPager.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mPager.setCurrentItem(argument_wine);
+                }
+            }, 100);
+        }
     }
 
     @Override
@@ -120,31 +146,42 @@ public class WineryFragment extends Fragment implements ViewPager.OnPageChangeLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        boolean superValue = super.onOptionsItemSelected(item);
-        if(item.getItemId()== R.id.menu_next  && mPager.getCurrentItem()<mWinery.getWineCount()-1){
-            mPager.setCurrentItem(mPager.getCurrentItem()+1);
-            return true;
-        }
-        else if(item.getItemId()==R.id.menu_prev && mPager.getCurrentItem()>0){
-            mPager.setCurrentItem(mPager.getCurrentItem()-1);
-            return true;
+        if(mPager!=null){
+            if(item.getItemId()== R.id.menu_next  && mPager.getCurrentItem()<mWinery.getWineCount()-1){
+                mPager.setCurrentItem(mPager.getCurrentItem()+1);
+                return true;
+            }
+            else if(item.getItemId()==R.id.menu_prev && mPager.getCurrentItem()>0){
+                mPager.setCurrentItem(mPager.getCurrentItem()-1);
+                return true;
+            }else{
+                return super.onOptionsItemSelected(item);
+            }
         }else{
-            return superValue;
+            return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        MenuItem menuNext = menu.findItem(R.id.menu_next);
-        MenuItem menuPrevious = menu.findItem(R.id.menu_prev);
-
-        menuNext.setEnabled(mPager.getCurrentItem()<mWinery.getWineCount()-1);
-        menuPrevious.setEnabled(mPager.getCurrentItem() > 0);
+        if(mPager!=null){
+            MenuItem menuNext = menu.findItem(R.id.menu_next);
+            MenuItem menuPrevious = menu.findItem(R.id.menu_prev);
+            menuNext.setEnabled(mPager.getCurrentItem()<mWinery.getWineCount()-1);
+            menuPrevious.setEnabled(mPager.getCurrentItem() > 0);
+        }
     }
 
     public void changeWine(int wineIndex){
         mPager.setCurrentItem(wineIndex);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mPager!=null){
+            getArguments().putInt(ARG_WINE_INDEX,mPager.getCurrentItem());
+        }
+    }
 }
